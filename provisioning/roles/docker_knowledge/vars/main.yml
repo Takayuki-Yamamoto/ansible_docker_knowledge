@@ -1,2 +1,7 @@
 ---
 # vars file for docker_knowledge
+db_user: postgres
+db_pass: admin123
+db_name: knowledge_production
+
+port: 8080

@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  postgres-knowledge:
+    image: postgres:9
+    container_name: postgres-knowledge
+    restart: always
+    environment:
+      - POSTGRES_USER={{ db_user }}
+      - POSTGRES_PASSWORD={{ db_pass }}
+      - POSTGRES_DB={{ db_name }}
+    volumes:
+      - /srv/docker/postgres/data:/var/lib/postgresql/data
+
+  knowledge:
+    image: koda/docker-knowledge
+    container_name: knowledge
+    restart: always
+    volumes:
+      - /srv/docker/knowledge:/root/.knowledge
+    links:
+      - postgres-knowledge:postgres
+    ports:
+      - "{{ port }}:8080"
+    environment:
+      - POSTGRES_USER={{ db_user }}
+      - POSTGRES_PASSWORD={{ db_pass }}
+      - POSTGRES_DB={{ db_name }}

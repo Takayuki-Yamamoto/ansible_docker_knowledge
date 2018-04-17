@@ -1,4 +1,11 @@
 ---
 # tasks file for docker_knowledge
-- name: "echo docker_knowledge"
-  command: echo "docker_knowledge"
+- name: docker-compose location config file directory
+  file: path=/opt/knowledge state=directory owner=root group=root mode=0644
+
+- name: Copy docker-compose.yml
+  become: yes
+  template: src=docker-compose.yml.j2 dest=/opt/knowledge/docker-compose.yml owner=root group=root mode=0644
+
+- name: Up knowledge
+  docker_service: project_src=/opt/knowledge state=present
