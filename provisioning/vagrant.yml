@@ -1,0 +1,8 @@
+---
+# file: provisioning/vagrant.yml
+- hosts: Vagrant
+  sudo: yes
+  roles:
+    - { role: docker }
+    - { role: docker_knowledge }
+

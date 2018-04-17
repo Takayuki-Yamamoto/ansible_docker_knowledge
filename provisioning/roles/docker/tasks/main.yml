@@ -1,0 +1,4 @@
+---
+# tasks file for docker
+- name: "echo docker"
+  command: echo "docker"
