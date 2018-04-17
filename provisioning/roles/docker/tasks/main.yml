@@ -1,4 +1,31 @@
 ---
 # tasks file for docker
-- name: "echo docker"
-  command: echo "docker"
+- name: Install packages
+  become: yes
+  apt: name="{{ item.name }}" state=present update_cache=yes
+  with_items: "{{ required_packages }}"
+
+- name: set dockers official gpg key
+  apt_key: url="{{ apt_key_url }}" state=present
+  register: set_key
+
+- name: Set up the stable repository
+  apt_repository: repo="{{ repo }}" state=present
+  when: set_key
+  register: set_repo
+
+- name: Install docker-ce
+  apt: pkg=docker-ce state=present update_cache=yes
+  when: set_repo
+  notify: restart docker
+
+- name: Add user at docker group
+  become: yes
+  user: name=vagrant groups=docker append=yes
+  tags: dockerhost
+
+- name: Install dependencies
+  easy_install: name=pip
+
+- name: Install docker-compose
+  pip: name=docker-compose state=present

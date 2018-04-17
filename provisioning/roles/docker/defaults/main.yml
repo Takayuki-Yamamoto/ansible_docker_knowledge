@@ -1,2 +1,11 @@
 ---
 # defaults file for docker
+required_packages:
+  - name: curl
+  - name: apt-transport-https
+  - name: ca-certificates
+  - name: python-setuptools
+
+apt_key_url: https://download.docker.com/linux/ubuntu/gpg
+
+repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
