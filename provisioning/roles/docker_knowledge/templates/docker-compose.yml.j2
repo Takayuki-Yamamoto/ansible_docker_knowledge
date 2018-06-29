@@ -1,6 +1,13 @@
 version: '2'
 
 services:
+  data_box:
+    image: busybox
+    container_name: data_box
+    volumes:
+      - /home/vagrant/docker/postgres/data:/var/lib/postgresql/data
+      - /home/vagrant/docker/knowledge:/root/.knowledge
+
   db:
     image: postgres:9
     container_name: knowledge-db
@@ -9,16 +16,16 @@ services:
       - POSTGRES_USER={{ db_user }}
       - POSTGRES_PASSWORD={{ db_pass }}
       - POSTGRES_DB={{ db_name }}
-    volumes:
-      - /srv/docker/postgres/data:/var/lib/postgresql/data
+    volumes_from:
+      - data_box
 
   knowledge:
     image: koda/docker-knowledge
     container_name: knowledge
     restart: always
-    volumes:
-      - /srv/docker/knowledge:/root/.knowledge
+    volumes_from:
+      - data_box
     links:
-      - db:postgres
+      - db
     ports:
       - "{{ port }}:8080"
